@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "d8180324-3b31-4717-bad6-074b29a10f8a",
+		"name": "Rest API Collection",
+		"description": "Demonstrating my proficiency in backend development using PHP and Laravel by building a RESTful API with user authentication, CRUD functionality, and clear documentation.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33876829"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"John Doe\",\r\n  \"email\": \"john@example.com\",\r\n  \"password\": \"password\",\r\n  \"password_confirmation\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"register"
+					]
+				},
+				"description": "This endpoint allows a user to register a new account by providing their `name`, `email`, and `password`. After a successful registration, the user will receive an authentication token.\n\n**Authentication**:  \nThis endpoint does **not** require authentication, as it's for user registration.\n\n**Request Body**:\n\n- `name` (string, required): The full name of the user.\n    \n- `email` (string, required): The email address of the user.\n    \n- `password` (string, required): The password for the user account (must be at least 6 characters).\n    \n- `password_confirmation` (string, required): The confirmation of the password to ensure it matches.\n    \n\n  \n**Response (201 Created)**:  \n`{   \"user\": {   \"id\": 1,   \"name\": \"John Doe\",   \"email\": \"`[<code>user@example.com</code>](https://mailto:user@example.com)`\"   },   \"token\": \"generated_token_here\"   }`  \n\n**Response (400 Bad Request)**:  \n`{   \"status\": \"error\",   \"message\": \"Validation error. Please check the provided data.\"   }`  \n\n**Status Codes**:\n\n- `201 Created`: The user was successfully registered and the token is returned.\n    \n- `400 Bad Request`: There was a validation error in the provided data (e.g., missing fields, invalid email, etc.)."
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"john@example.com\",\r\n  \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				},
+				"description": "This endpoint allows users to log in using their email and password. On successful login, it returns a Sanctum token to authenticate future requests.\n\n**Authentication**:  \nRequires **no authentication** for login itself but requires valid credentials.\n\nSuccess Response:\n\n`{ \"user\": { \"id\": 1, \"name\": \"John Doe\", \"email\": \"user@example.com\" }, \"token\": \"generated_token_here\" }`\n\nResponse (401 Unauthorized):\n\n`{ \"status\": \"error\", \"message\": \"Invalid credentials\" }`"
+			},
+			"response": []
+		},
+		{
+			"name": "Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5|yhzWHwdyJBTNQWlzasNTS6HdE4rbs2DQJWnGFi6K471752f0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"My New Postfff 2\",\r\n    \"content\": \"This is the coffffntent of my new post.\",\r\n    \"user_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/posts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "This endpoint allows an authenticated user to create a new post. The post requires a `title` and `content` to be provided.\n\n**Authentication**:  \nRequires **authentication** via a **Sanctum token** in the `Authorization` header.\n\n**Request Body**:\n\n- `title` (string, required): The title of the post.\n    \n- `content` (string, required): The content of the post.\n    \n\n  \n**Response (201 Created)**:  \n`{   \"status\": \"success\",   \"message\": \"Post created successfully\",   \"post\": {   \"id\": 1,   \"title\": \"New Post Title\",   \"content\": \"This is the content of the new post.\",   \"user_id\": 1,   \"created_at\": \"2025-01-17T12:34:56.000000Z\",   \"updated_at\": \"2025-01-17T12:34:56.000000Z\"   }   }`  \n  \nResponse (400 Bad Request)  \n`{   \"status\": \"error\",   \"message\": \"Validation error. Please check the provided data.\"   }`  \n  \n**Response (401 Unauthorized)**:  \n`{   \"status\": \"error\",   \"message\": \"Unauthorized. Please provide a valid authentication token.\"   }`  \n  \n**Status Codes**:\n\n- `201 Created`: Successfully created the post.\n    \n- `400 Bad Request`: There was a validation error in the provided data (e.g., missing fields, invalid data).\n    \n- `401 Unauthorized`: The request does not have a valid authentication token or the token has expired."
+			},
+			"response": []
+		},
+		{
+			"name": "All Posts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "5|yhzWHwdyJBTNQWlzasNTS6HdE4rbs2DQJWnGFi6K471752f0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/posts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "This endpoint retrieves a list of all posts. It does not require authentication.\n\nHowever the User will have to be an uthenticated user.\n\n**Response (200 OK)**:  \n`{   \"posts\": [   {   \"id\": 1,   \"title\": \"Post 1 Title\",   \"content\": \"This is the content of the first post.\",   \"user_id\": 1,   \"created_at\": \"2025-01-17T12:34:56.000000Z\",   \"updated_at\": \"2025-01-17T12:34:56.000000Z\"   },   {   \"id\": 2,   \"title\": \"Post 2 Title\",   \"content\": \"This is the content of the second post.\",   \"user_id\": 2,   \"created_at\": \"2025-01-17T13:34:56.000000Z\",   \"updated_at\": \"2025-01-17T13:34:56.000000Z\"   }   ]   }`  \n  \n**Status Codes**:\n\n- `200 OK`: Successfully fetched all posts."
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "6|9tHNQiHRHpRoSDosYav4wPV0lUCullZAjb7r0Smb9967d5da",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Updateffddd Title2\",\r\n    \"content\": \"This is the updated content of the post.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/posts/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"posts",
+						"1"
+					]
+				},
+				"description": "This endpoint allows the authenticated user to update an existing post. Only the user who created the post is allowed to edit it.\n\n**Authentication**:  \nRequires **authentication** via a **Sanctum token** in the `Authorization` header.\n\n**Request Parameters**:\n\n- `id` (Path Parameter): The ID of the post you want to update.\n    \n\n**Request Body**:\n\n- `title` (string, required): The new title of the post.\n    \n- `content` (string, required): The new content of the post.\n    \n\nResponse (200 OK):  \n`{   \"status\": \"success\",   \"message\": \"Post updated successfully\",   \"post\": {   \"id\": 1,   \"title\": \"Updated Post Title\",   \"content\": \"Updated post content.\",   \"user_id\": 1,   \"created_at\": \"2025-01-17T12:34:56.000000Z\",   \"updated_at\": \"2025-01-17T12:45:12.000000Z\"   }   }`  \n  \n**Response (404 Not Found)**:  \n`{   \"status\": \"error\",   \"message\": \"Post not found\"   }`  \n\n**Response (403 Forbidden)**:  \n`{   \"status\": \"error\",   \"message\": \"You are not authorized to update this post\"   }`\n\nResponse (400 Bad Request)  \n`{   \"status\": \"error\",   \"message\": \"Invalid data provided\"   }`  \n  \n**Status Codes**:\n\n- `200 OK`: Successfully updated the post.\n    \n- `404 Not Found`: The post with the given ID does not exist.\n    \n- `403 Forbidden`: The authenticated user is not the owner of the post and cannot update it.\n    \n- `400 Bad Request`: The request body is invalid or missing required fields."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "6|9tHNQiHRHpRoSDosYav4wPV0lUCullZAjb7r0Smb9967d5da",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/posts/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"posts",
+						"1"
+					]
+				},
+				"description": "This endpoint deletes the post of an authenticated user.\n\nThe user must provide a valid Sanctum token to access this endpoint.\n\n**Authentication**:  \nRequires **authentication** via a **Sanctum token** in the request header.\n\n**Delete Post (DELETE /api/posts/{id})**:\n\nResponse (200 OK)  \n`{ \"status\": \"success\", \"message\": \"Post deleted successfully\" }`\n\nResponse (404 Not Found):  \n`{ \"status\": \"error\", \"message\": \"Post not found\" }`\n\nResponse (403 Forbidden):  \n`{ \"status\": \"error\", \"message\": \"You are not authorized to delete this post\" }`\n\nOnce you have tested the delete endpoint in Postman, follow these steps:\n\n1. **Create a new request** for `DELETE /api/posts/{id}` in your Postman collection.\n    \n2. **Set the request URL** to the correct endpoint, replacing `{id}` with a valid post ID.\n    \n3. **Add the** **`Authorization`** **header** with a valid token.\n    \n4. **Save the successful response** as an example, including the 200, 404, and 403 responses.\n    \n\nThis will allow other developers to understand how to use the **delete post** functionality in your API and test it effectively in Postman.\n\n### Notes:\n\n- Ensure that the request is authenticated and that the token provided belongs to the user who created the post.\n    \n- The post can only be deleted by its creator; otherwise, a `403 Forbidden` error will be returned."
+			},
+			"response": []
+		},
+		{
+			"name": "Activity Log",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "6|9tHNQiHRHpRoSDosYav4wPV0lUCullZAjb7r0Smb9967d5da",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/activity",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activity"
+					]
+				},
+				"description": "This endpoint returns the activity logs of the authenticated user. The user must provide a valid Sanctum token to access this endpoint.\n\n**Authentication**:  \nRequires **authentication** via a **Sanctum token** in the request header.\n\n**Response (200 OK)**:  \n`{   \"logs\": [   {   \"user_id\": 1,   \"action\": \"User logged in\",   \"description\": \"User successfully logged into the system.\",   \"created_at\": \"2025-01-17T12:34:56.000000Z\"   },   {   \"user_id\": 1,   \"action\": \"User viewed profile\",   \"description\": \"User viewed their profile page.\",   \"created_at\": \"2025-01-17T12:40:12.000000Z\"   }   ]   }`\n\n**Response (404 Not Found)**:  \n{  \n\"message\": \"No activity logs found for this user.\"  \n}"
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "6|9tHNQiHRHpRoSDosYav4wPV0lUCullZAjb7r0Smb9967d5da",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://rest-api.test/api/logout",
+					"protocol": "http",
+					"host": [
+						"rest-api",
+						"test"
+					],
+					"path": [
+						"api",
+						"logout"
+					]
+				},
+				"description": "This endpoint logs the currently authenticated user out by revoking their active token. Once the token is revoked, the user will need to log in again to obtain a new token for subsequent requests.\n\n**Authentication**:  \nRequires **authentication** via a **Sanctum token** in the `Authorization` header.  \n\n**Response (200 OK)**:  \n`{   \"message\": \"Logged out successfully\"   }`\n\n**Response (401 Unauthorized)**\n\n`{   \"status\": \"error\",   \"message\": \"Unauthorized. No active session found.\"   }`\n\n  \n**Status Codes**:\n\n- `200 OK`: Successfully logged out and token revoked.\n    \n- `401 Unauthorized`: No valid token found or the user is not authenticated."
+			},
+			"response": []
+		}
+	]
+}
